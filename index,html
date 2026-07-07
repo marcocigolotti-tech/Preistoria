@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: L'Arte nella Preistoria</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+        
+        :root {
+            --kahoot-red: #e21b3c;
+            --kahoot-blue: #1368ce;
+            --kahoot-yellow: #d89e00;
+            --kahoot-green: #26890c;
+            --bg-color: #f2f2f2;
+            --text-dark: #333;
+        }
+        
+        * {
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        #app {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            animation: fadeIn 0.4s ease-in;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        p.subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        
+        button.action-btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: white;
+            background-color: var(--kahoot-blue);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #0d4a96;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        
+        button.action-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .question-header {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .option {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            transition: opacity 0.3s, transform 0.1s;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .option:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        
+        .option:nth-child(1) { background-color: var(--kahoot-red); box-shadow: 0 4px 0 #b3122c; }
+        .option:nth-child(2) { background-color: var(--kahoot-blue); box-shadow: 0 4px 0 #0d4a96; }
+        .option:nth-child(3) { background-color: var(--kahoot-yellow); box-shadow: 0 4px 0 #a37700; }
+        .option:nth-child(4) { background-color: var(--kahoot-green); box-shadow: 0 4px 0 #1c6608; }
+        
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        
+        .option.correct {
+            border: 4px solid #fff;
+            opacity: 1 !important;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(0,255,0,0.5) !important;
+        }
+        
+        .option.wrong {
+            opacity: 0.3 !important;
+        }
+        
+        .feedback {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+            border-top: 8px solid;
+        }
+        
+        .feedback.show {
+            display: block;
+        }
+        
+        .feedback-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .feedback-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #444;
+            font-weight: 500;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="start-screen" class="screen active">
+        <h1>L'Arte nella Preistoria</h1>
+        <p class="subtitle">30 domande per mettersi alla prova sulle prime opere create dall'uomo!</p>
+        <button class="action-btn" onclick="startQuiz()">GIOCA ORA</button>
+    </div>
+
+    <div id="quiz-screen" class="screen">
+        <div class="status-bar">
+            <span id="question-counter">Domanda 1 / 30</span>
+            <span id="score-display">Punti: 0</span>
+        </div>
+        
+        <div class="question-header">
+            <h2 id="question-text" class="question-text">Caricamento domanda...</h2>
+        </div>
+
+        <div class="options-grid" id="options-container">
+            </div>
+
+        <div id="feedback-box" class="feedback">
+            <h3 id="feedback-title" class="feedback-title">Risultato</h3>
+            <p id="feedback-text" class="feedback-text">Spiegazione qui...</p>
+            <button class="action-btn" onclick="nextQuestion()">PROSSIMA DOMANDA</button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="screen">
+        <h1>Quiz Terminato!</h1>
+        <p class="subtitle" id="final-score">Hai totalizzato X punti su 30.</p>
+        <button class="action-btn" onclick="location.reload()">RIGIOCA</button>
+    </div>
+</div>
+
+<script>
+    // Dati basati sul PDF "PREISTORIA - PROF.CIGO"
+    const questions = [
+        {
+            q: "Cosa significa il termine 'Preistoria'?",
+            options: ["Prima dell'uomo", "Prima dei dinosauri", "Prima della storia", "Età del bronzo"],
+            answer: 2,
+            explanation: "Il termine 'Preistoria' significa letteralmente 'prima della storia'. È il periodo che termina con l'invenzione della scrittura (circa 5000 anni fa)."
+        },
+        {
+            q: "Quale evento segna la fine della Preistoria e l'inizio della Storia?",
+            options: ["La scoperta del fuoco", "L'invenzione della ruota", "L'invenzione della scrittura", "La nascita di Roma"],
+            answer: 2,
+            explanation: "La Preistoria finisce circa 5000 anni fa con l'invenzione della scrittura. Da quel momento inizia la 'Storia'."
+        },
+        {
+            q: "In quali tre periodi si divide la Preistoria?",
+            options: ["Paleolitico, Mesolitico, Neolitico", "Cretaceo, Giurassico, Triassico", "Bronzo, Rame, Ferro", "Archaico, Classico, Ellenistico"],
+            answer: 0,
+            explanation: "Si divide in Paleolitico (da 1.8 milioni a 10mila a.C.), Mesolitico e Neolitico (fino al 3500 a.C.)."
+        },
+        {
+            q: "Quale celebre grotta in Spagna ospita alcune delle prime pitture rupestri mai scoperte?",
+            options: ["Lascaux", "Chauvet", "Altamira", "Willendorf"],
+            answer: 2,
+            explanation: "Le grotte di Altamira in Spagna sono famose per le loro figure stilizzate di animali e per le impronte di mani scoperte a fine Ottocento."
+        },
+        {
+            q: "Come venivano realizzate le 'mani in negativo' sulle pareti rocciose?",
+            options: ["Incisione profonda con selce", "Spruzzando il colore con la bocca", "Ricalcando con carbone", "Scolpendo la roccia"],
+            answer: 1,
+            explanation: "L'artista poggiava la mano e spruzzava il colore misto a saliva direttamente con la bocca, lasciando la sagoma sul muro."
+        },
+        {
+            q: "Qual era una probabile funzione delle pitture rupestri preistoriche?",
+            options: ["Decorativa e per i turisti", "Funzione magica e propiziatoria per la caccia", "Usate come segnali stradali", "Semplici giochi per bambini"],
+            answer: 1,
+            explanation: "Si dipingevano animali con funzione magica e propiziatoria: speravano che dipingendo la caccia, questa avrebbe avuto successo."
+        },
+        {
+            q: "Quale grotta francese è soprannominata 'la Cappella Sistina della preistoria'?",
+            options: ["Grotte di Lascaux", "Grotte di Altamira", "Grotta di Chauvet", "Caverna delle Mani"],
+            answer: 0,
+            explanation: "Le Grotte di Lascaux, scoperte nel 1940 in Francia, offrono dipinti eccezionali di animali datati fino a 15.000 a.C."
+        },
+        {
+            q: "Perché è scorretto chiamare 'affreschi' i dipinti di Lascaux?",
+            options: ["Perché sono fatti ad olio", "Perché non usavano pennelli", "Perché usavano solo il nero", "Perché il colore è steso sulla roccia senza intonaco"],
+            answer: 3,
+            explanation: "L'affresco prevede l'uso dell'intonaco fresco. Lì invece stendevano il colore direttamente sulla roccia umida e calcarea."
+        },
+        {
+            q: "I dipinti rupestri più antichi mai ritrovati (32.000 anni fa) in quale grotta si trovano?",
+            options: ["Altamira", "Lascaux", "Chauvet", "Willendorf"],
+            answer: 2,
+            explanation: "Scoperta nel 1994, la Grotta Chauvet custodisce i dipinti più antichi, rimasti sigillati da una frana per 20.000 anni."
+        },
+        {
+            q: "Perché la vera grotta Chauvet fu chiusa al pubblico e sostituita da Chauvet 2?",
+            options: ["Era troppo buia e pericolosa", "Per proteggere i dipinti da luce, calore e muffe", "Non c'era spazio per le auto", "È crollata poco dopo la scoperta"],
+            answer: 1,
+            explanation: "Il respiro, il calore e i batteri dei turisti rovinavano l'arte, così è stata creata una replica perfetta, Chauvet 2."
+        },
+        {
+            q: "Da cosa veniva ricavato il colore nero utilizzato dai pittori preistorici?",
+            options: ["Da petrolio grezzo", "Dal carbone e dalla fuliggine", "Spremendo bacche velenose", "Mischiando inchiostro di seppia"],
+            answer: 1,
+            explanation: "Il colore nero si otteneva facilmente raccogliendo carbone e fuliggine avanzati dalla combustione della legna nel fuoco."
+        },
+        {
+            q: "Quale minerale donava alle pitture il caratteristico colore rosso?",
+            options: ["Lapislazzuli", "Ocra rossa derivante dall'ematite", "Zolfo", "Zinco"],
+            answer: 1,
+            explanation: "Il rosso era realizzato con l'ocra rossa, una terra estratta dall'ematite (una pietra molto ricca di ferro)."
+        },
+        {
+            q: "Oltre che con le mani, con quali attrezzi applicavano il colore sulle rocce?",
+            options: ["Con spugne di mare", "Non usavano nulla", "Spruzzandolo con la bocca o con pennelli di pelliccia/rametti", "Pennelli sintetici"],
+            answer: 2,
+            explanation: "Inventarono primitive tecniche: mischiavano il colore in bocca per spruzzarlo, oppure usavano pennelli creati con pelo animale."
+        },
+        {
+            q: "Con cosa si mescolavano i pigmenti naturali (terre/carbone) per farli aderire alla parete?",
+            options: ["Uovo e latte", "Vernice acrilica", "Resina, grasso, acqua o sangue", "Cera d'api pura"],
+            answer: 2,
+            explanation: "Le polveri venivano fatte aderire e rese spalmabili mescolandole a fluidi facilmente reperibili, come grasso animale o sangue."
+        },
+        {
+            q: "Cosa utilizzavano gli uomini preistorici per fare le 'incisioni rupestri'?",
+            options: ["Scalpelli in metallo", "Strumenti di pietra o osso", "Punte di diamante", "Un semplice bastone di legno"],
+            answer: 1,
+            explanation: "Essendo nell'età della pietra, usavano attrezzi duri in pietra scheggiata (come la selce) o frammenti d'osso."
+        },
+        {
+            q: "Perché la scultura del Paleolitico era prevalentemente di piccole dimensioni?",
+            options: ["Non c'erano pietre grandi", "L'uomo era nomade e l'arte doveva essere 'portatile'", "Era proibito dai sacerdoti", "Non avevano gli strumenti adatti"],
+            answer: 1,
+            explanation: "Vivendo in continuo spostamento per la caccia, le sculture (10-25 cm) dovevano essere facilmente trasportate in tasca."
+        },
+        {
+            q: "Cosa rappresentavano principalmente le statuette chiamate 'Veneri'?",
+            options: ["Donne guerriere", "Dee della guerra", "Salute e fertilità (della donna e della terra)", "Volti di persone reali"],
+            answer: 2,
+            explanation: "Avere 'forme generose' era simbolo di sopravvivenza, abbondanza e fecondità, fondamentali per la preistoria."
+        },
+        {
+            q: "Come veniva trattato il volto nelle Veneri preistoriche?",
+            options: ["Era estremamente realistico", "Quasi mai definito, perché la statua era un simbolo, non un ritratto", "Era sempre sorridente", "Era un autoritratto"],
+            answer: 1,
+            explanation: "Non interessava l'identità della persona; le Veneri non hanno lineamenti del viso per sottolinearne il significato magico universale."
+        },
+        {
+            q: "La famosa scultura 'Venere di Willendorf' (risalente a 25.000 anni fa), dove è stata ritrovata?",
+            options: ["Francia", "Spagna", "Italia", "Austria"],
+            answer: 3,
+            explanation: "È stata rinvenuta in Austria ed è oggi conservata al Museo di Storia Naturale di Vienna. È alta solo 11 centimetri."
+        },
+        {
+            q: "Dalla recente scansione della Venere di Willendorf, da dove proverrebbe originariamente la pietra calcarea che la compone?",
+            options: ["Dal fiume Nilo", "Dal Monte Bianco", "Vicino al Lago di Garda", "Da Stonehenge"],
+            answer: 2,
+            explanation: "Grazie alla tomografia, si è scoperto che la roccia porosa contiene resti di conchiglie compatibili con l'area del Lago di Garda in Italia."
+        },
+        {
+            q: "Cosa si intende per architettura 'Megalitica' nata a fine Neolitico?",
+            options: ["Costruzione di grattacieli", "Costruzioni fatte con enormi blocchi di pietra", "Case costruite in legno leggero", "Palafitte sull'acqua"],
+            answer: 1,
+            explanation: "Dal greco mega (grande) e lithos (pietra): costruzioni non per uso abitativo ma religioso, funebre o astronomico."
+        },
+        {
+            q: "Cos'è un Menhir?",
+            options: ["Una casa", "Un singolo enorme blocco di pietra conficcato verticalmente nel terreno", "Una spada", "Una collana di pietra"],
+            answer: 1,
+            explanation: "La parola Menhir significa 'pietra lunga'. Segnava un luogo sacro o la presenza di una sepoltura."
+        },
+        {
+            q: "Cosa costituiva solitamente un Dolmen?",
+            options: ["Una grande casa invernale", "Una tomba collettiva o un altare per sacrifici", "Una recinzione", "Un pozzo"],
+            answer: 1,
+            explanation: "Significa 'pietre a tavola': erano tombe monumentali coperte usate in comunità nel Neolitico."
+        },
+        {
+            q: "Com'è composta la struttura base di un Dolmen (il sistema Trilitico)?",
+            options: ["Tre pietre orizzontali", "Due pietre orizzontali e una verticale", "Due pietre verticali (piedritti) coperte da una orizzontale (architrave)", "Un'unica grossa pietra incisa"],
+            answer: 2,
+            explanation: "Trilitico significa 'tre pietre': i montanti verticali reggono il peso dell'architrave in alto."
+        },
+        {
+            q: "Qual è il limite principale (difetto statico) del sistema costruttivo Trilitico?",
+            options: ["Crolla con il vento", "I piedritti non possono essere troppo distanti, altrimenti l'architrave in pietra si spezza", "Usa troppo legno", "Nessuno, è indistruttibile"],
+            answer: 1,
+            explanation: "La pietra non è flessibile: un architrave troppo lungo si spezza a causa del proprio peso al centro della campata."
+        },
+        {
+            q: "Che cos'è un Cromlech?",
+            options: ["Un recinto di legno", "Un'arma da caccia", "Più dolmen o menhir disposti in cerchio", "Un tipo di pittura rupestre"],
+            answer: 2,
+            explanation: "I Cromlech sono recinti sacri formati da megaliti disposti in modo circolare, spesso legati a culti solari o astronomici."
+        },
+        {
+            q: "Dove si trova Stonehenge, il più famoso monumento megalitico del mondo (2.600 a.C.)?",
+            options: ["Pianura di Salisbury, Gran Bretagna", "Parigi, Francia", "Roma, Italia", "Dordogna, Francia"],
+            answer: 0,
+            explanation: "Si erge nella pianura britannica, formato da due cerchi concentrici di monoliti e immensi triliti a ferro di cavallo."
+        },
+        {
+            q: "Con quale evento astronomico è perfettamente allineato l'asse principale di Stonehenge?",
+            options: ["L'eclissi lunare", "La comparsa di comete", "Il sorgere del sole durante il solstizio d'estate", "L'equinozio di autunno"],
+            answer: 2,
+            explanation: "L'allineamento permette al sole nascente del solstizio d'estate di illuminare direttamente il centro esatto della struttura."
+        },
+        {
+            q: "Perché le pietre dell'anello interno di Stonehenge si chiamano 'bluestones' (pietre blu)?",
+            options: ["Furono dipinte di blu", "Appartenevano a un Re Blu", "Sono di origine vulcanica e si colorano di blu a contatto con l'acqua", "Riflettono il cielo notturno"],
+            answer: 2,
+            explanation: "Queste specifiche pietre in dolerite (originarie del Galles) assumono una misteriosa tinta blu scuro quando si bagnano per la pioggia."
+        },
+        {
+            q: "Come evolve l'abitazione dell'uomo passando dal Paleolitico al Neolitico?",
+            options: ["Da villaggi stanziali a caverne nomadi", "Diventano case in cemento", "Si abita sempre in caverne", "Da caverne naturali per i nomadi, a villaggi stanziali di capanne e palafitte"],
+            answer: 3,
+            explanation: "Sviluppando allevamento e agricoltura (Mesolitico/Neolitico), l'uomo cessa di essere nomade e costruisce i primi veri villaggi."
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    const startScreen = document.getElementById('start-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const endScreen = document.getElementById('end-screen');
+    const qText = document.getElementById('question-text');
+    const qCounter = document.getElementById('question-counter');
+    const optContainer = document.getElementById('options-container');
+    const feedbackBox = document.getElementById('feedback-box');
+    const feedbackTitle = document.getElementById('feedback-title');
+    const feedbackText = document.getElementById('feedback-text');
+    const scoreDisplay = document.getElementById('score-display');
+    const finalScore = document.getElementById('final-score');
+
+    function startQuiz() {
+        startScreen.classList.remove('active');
+        quizScreen.classList.add('active');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        feedbackBox.classList.remove('show');
+        optContainer.innerHTML = '';
+        const data = questions[currentQ];
+        
+        qText.textContent = data.q;
+        qCounter.textContent = `Domanda ${currentQ + 1} / ${questions.length}`;
+
+        data.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option';
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx, btn);
+            optContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(selectedIndex, btnElement) {
+        const data = questions[currentQ];
+        const isCorrect = (selectedIndex === data.answer);
+        
+        const allButtons = optContainer.querySelectorAll('.option');
+        allButtons.forEach((btn, idx) => {
+            btn.classList.add('disabled');
+            if (idx === data.answer) {
+                btn.classList.add('correct');
+            } else if (idx === selectedIndex && !isCorrect) {
+                btn.classList.add('wrong');
+            }
+        });
+
+        if (isCorrect) {
+            score++;
+            scoreDisplay.textContent = `Punti: ${score}`;
+            feedbackTitle.textContent = "✅ Corretto!";
+            feedbackBox.style.borderColor = "var(--kahoot-green)";
+            feedbackTitle.style.color = "var(--kahoot-green)";
+        } else {
+            feedbackTitle.textContent = "❌ Sbagliato!";
+            feedbackBox.style.borderColor = "var(--kahoot-red)";
+            feedbackTitle.style.color = "var(--kahoot-red)";
+        }
+
+        feedbackText.textContent = data.explanation;
+        feedbackBox.classList.add('show');
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            quizScreen.classList.remove('active');
+            endScreen.classList.add('active');
+            finalScore.textContent = `Hai totalizzato ${score} punti su ${questions.length}.`;
+        }
+    }
+</script>
+
+</body>
+</html>
