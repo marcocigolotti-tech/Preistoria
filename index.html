@@ -55,9 +55,20 @@
             display: flex;
         }
         
+        /* Stile per l'intestazione fissa del docente */
+        .teacher-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--kahoot-blue);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
         h1 {
             font-size: 2.2rem;
             color: #333;
+            margin-top: 0;
             margin-bottom: 10px;
             font-weight: 900;
         }
@@ -213,6 +224,7 @@
 
 <div id="app">
     <div id="start-screen" class="screen active">
+        <p class="teacher-header">Prof. Marco Cigolotti - Quiz Didattico</p>
         <h1>L'Arte nella Preistoria</h1>
         <p class="subtitle">30 domande per mettersi alla prova sulle prime opere create dall'uomo!</p>
         <button class="action-btn" onclick="startQuiz()">GIOCA ORA</button>
@@ -406,7 +418,7 @@
         },
         {
             q: "Dove si trova Stonehenge, il più famoso monumento megalitico del mondo (2.600 a.C.)?",
-            options: ["Pianura di Salisbury, Gran Bretagna", "Parigi, Francia", "Roma, Italia", "Dordogna, Francia"],
+            options: ["Pianura di Salisbury, Gran Breitagna", "Parigi, Francia", "Roma, Italia", "Dordogna, Francia"],
             answer: 0,
             explanation: "Si erge nella pianura britannica, formato da due cerchi concentrici di monoliti e immensi triliti a ferro di cavallo."
         },
