@@ -68,7 +68,7 @@
             height: 60px; /* Altezza del logo regolabile */
             width: auto;
             object-fit: contain;
-            border-radius: 8px; /* Opzionale: arrotonda leggermente i bordi dell'immagine */
+            border-radius: 8px;
         }
 
         .teacher-header span {
@@ -243,7 +243,7 @@
 <div id="app">
     <div id="start-screen" class="screen active">
         <div class="teacher-header">
-            <img src="https://drive.google.com/uc?export=view&id=1FtOIGAfVR94QXAEOQI7iyvtagLfg04BJ" alt="Logo Prof">
+            <img src="logo.png" alt="Logo Prof">
             <span>Prof. Marco Cigolotti<br><small style="font-size: 0.9rem; color: #666;">Quiz Didattico</small></span>
         </div>
         
@@ -263,7 +263,7 @@
         </div>
 
         <div class="options-grid" id="options-container">
-            </div>
+        </div>
 
         <div id="feedback-box" class="feedback">
             <h3 id="feedback-title" class="feedback-title">Risultato</h3>
@@ -273,7 +273,7 @@
     </div>
 
     <div id="end-screen" class="screen">
-        <img src="https://drive.google.com/uc?export=view&id=1FtOIGAfVR94QXAEOQI7iyvtagLfg04BJ" alt="Logo Prof" style="height: 60px; margin-bottom: 20px; border-radius: 8px;">
+        <img src="logo.png" alt="Logo Prof" style="height: 60px; margin-bottom: 20px; border-radius: 8px;">
         
         <h1>Quiz Terminato!</h1>
         <p class="subtitle" id="final-score">Hai totalizzato X punti su 30.</p>
@@ -282,7 +282,6 @@
 </div>
 
 <script>
-    // Database delle 30 domande sulla Preistoria
     const questions = [
         {
             q: "Cosa significa il termine 'Preistoria'?",
@@ -357,4 +356,194 @@
             explanation: "Il rosso era realizzato con l'ocra rossa, una terra estratta dall'ematite (una pietra molto ricca di ferro)."
         },
         {
-            q
+            q: "Oltre che con le mani, con quali attrezzi applicavano il colore sulle rocce?",
+            options: ["Con spugne di mare", "Non usavano nulla", "Spruzzandolo con la bocca o con pennelli di pelliccia/rametti", "Pennelli sintetici"],
+            answer: 2,
+            explanation: "Inventarono primitive tecniche: mischiavano il colore in bocca per spruzzarlo, oppure usavano pennelli creati con pelo animale."
+        },
+        {
+            q: "Con cosa si mescolavano i pigmenti naturali (terre/carbone) per farli aderire alla parete?",
+            options: ["Uovo e latte", "Vernice acrilica", "Resina, grasso, acqua o sangue", "Cera d'api pura"],
+            answer: 2,
+            explanation: "Le polveri venivano fatte aderire e rese spalmabili mescolandole a fluidi facilmente reperibili, come grasso animale o sangue."
+        },
+        {
+            q: "Cosa utilizzavano gli uomini preistorici per fare le 'incisioni rupestri'?",
+            options: ["Scalpelli in metallo", "Strumenti di pietra o osso", "Punte di diamante", "Un semplice bastone di legno"],
+            answer: 1,
+            explanation: "Essendo nell'età della pietra, usavano attrezzi duri in pietra scheggiata (come la selce) o frammenti d'osso."
+        },
+        {
+            q: "Perché la scultura del Paleolitico era prevalentemente di piccole dimensioni?",
+            options: ["Non c'erano pietre grandi", "L'uomo era nomade e l'arte doveva essere 'portatile'", "Era proibito dai sacerdoti", "Non avevano gli strumenti adatti"],
+            answer: 1,
+            explanation: "Vivendo in continuo spostamento per la caccia, le sculture (10-25 cm) dovevano essere facilmente trasportate in tasca."
+        },
+        {
+            q: "Cosa rappresentavano principalmente le statuette chiamate 'Veneri'?",
+            options: ["Donne guerriere", "Dee della guerra", "Salute e fertilità (della donna e della terra)", "Volti di persone reali"],
+            answer: 2,
+            explanation: "Avere 'forme generose' era simbolo di sopravvivenza, abbondanza e fecondità, fondamentali per la preistoria."
+        },
+        {
+            q: "Come veniva trattato il volto nelle Veneri preistoriche?",
+            options: ["Era estremamente realistico", "Quasi mai definito, perché la statua era un simbolo, non un ritratto", "Era sempre sorridente", "Era un autoritratto"],
+            answer: 1,
+            explanation: "Non interessava l'identità della persona; le Veneri non hanno lineamenti del viso per sottolinearne il significato magico universale."
+        },
+        {
+            q: "La famosa scultura 'Venere di Willendorf' (risalente a 25.000 anni fa), dove è stata ritrovata?",
+            options: ["Francia", "Spagna", "Italia", "Austria"],
+            answer: 3,
+            explanation: "È stata rinvenuta in Austria ed è oggi conservata al Museo di Storia Naturale di Vienna. È alta solo 11 centimetri."
+        },
+        {
+            q: "Dalla recente scansione della Venere di Willendorf, da dove proverrebbe originariamente la pietra calcarea che la compone?",
+            options: ["Dal fiume Nilo", "Dal Monte Bianco", "Vicino al Lago di Garda", "Da Stonehenge"],
+            answer: 2,
+            explanation: "Grazie alla tomografia, si è scoperto che la roccia porosa contiene resti di conchiglie compatibili con l'area del Lago di Garda in Italia."
+        },
+        {
+            q: "Cosa si intende per architettura 'Megalitica' nata a fine Neolitico?",
+            options: ["Costruzione di grattacieli", "Costruzioni fatte con enormi blocchi di pietra", "Case costruite in legno leggero", "Palafitte sull'acqua"],
+            answer: 1,
+            explanation: "Dal greco mega (grande) e lithos (pietra): costruzioni non per uso abitativo ma religioso, funebre o astronomico."
+        },
+        {
+            q: "Cos'è un Menhir?",
+            options: ["Una casa", "Un singolo enorme blocco di pietra conficcato verticalmente nel terreno", "Una spada", "Una collana di pietra"],
+            answer: 1,
+            explanation: "La parola Menhir significa 'pietra lunga'. Segnava un luogo sacro o la presenza di una sepoltura."
+        },
+        {
+            q: "Cosa costituiva solitamente un Dolmen?",
+            options: ["Una grande casa invernale", "Una tomba collettiva o un altare per sacrifici", "Una recinzione", "Un pozzo"],
+            answer: 1,
+            explanation: "Significa 'pietre a tavola': erano tombe monumentali coperte usate in comunità nel Neolitico."
+        },
+        {
+            q: "Com'è composta la struttura base di un Dolmen (il sistema Trilitico)?",
+            options: ["Tre pietre orizzontali", "Due pietre orizzontali e una verticale", "Due pietre verticali (piedritti) coperte da una orizzontale (architrave)", "Un'unica grossa pietra incisa"],
+            answer: 2,
+            explanation: "Trilitico significa 'tre pietre': i montanti verticali reggono il peso dell'architrave in alto."
+        },
+        {
+            q: "Qual è il limite principale (difetto statico) del sistema costruttivo Trilitico?",
+            options: ["Crolla con il vento", "I piedritti non possono essere troppo distanti, altrimenti l'architrave in pietra si spezza", "Usa troppo legno", "Nessuno, è indistruttibile"],
+            answer: 1,
+            explanation: "La pietra non è flessibile: un architrave troppo lungo si spezza a causa del proprio peso al centro della campata."
+        },
+        {
+            q: "Che cos'è un Cromlech?",
+            options: ["Un recinto di legno", "Un'arma da caccia", "Più dolmen o menhir disposti in cerchio", "Un tipo di pittura rupestre"],
+            answer: 2,
+            explanation: "I Cromlech sono recinti sacri formati da megaliti disposti in modo circolare, spesso legati a culti solari o astronomici."
+        },
+        {
+            q: "Dove si trova Stonehenge, il più famoso monumento megalitico del mondo (2.600 a.C.)?",
+            options: ["Pianura di Salisbury, Gran Bretagna", "Parigi, Francia", "Roma, Italia", "Dordogna, Francia"],
+            answer: 0,
+            explanation: "Si erge nella pianura britannica, formato da due cerchi concentrici di monoliti e immensi triliti a ferro di cavallo."
+        },
+        {
+            q: "Con quale evento astronomico è perfettamente allineato l'asse principale di Stonehenge?",
+            options: ["L'eclissi lunare", "La comparsa di comete", "Il sorgere del sole durante il solstizio d'estate", "L'equinozio di autunno"],
+            answer: 2,
+            explanation: "L'allineamento permette al sole nascente del solstizio d'estate di illuminare direttamente il centro esatto della struttura."
+        },
+        {
+            q: "Perché le pietre dell'anello interno di Stonehenge si chiamano 'bluestones' (pietre blu)?",
+            options: ["Furono dipinte di blu", "Appartenevano a un Re Blu", "Sono di origine vulcanica e si colorano di blu a contatto con l'acqua", "Riflettono il cielo notturno"],
+            answer: 2,
+            explanation: "Queste specifiche pietre in dolerite (originarie del Galles) assumono una misteriosa tinta blu scuro quando si bagnano per la pioggia."
+        },
+        {
+            q: "Come evolve l'abitazione dell'uomo passando dal Paleolitico al Neolitico?",
+            options: ["Da villaggi stanziali a caverne nomadi", "Diventano case in cemento", "Si abita sempre in caverne", "Da caverne naturali per i nomadi, a villaggi stanziali di capanne e palafitte"],
+            answer: 3,
+            explanation: "Sviluppando allevamento e agricoltura (Mesolitico/Neolitico), l'uomo cessa di essere nomade e costruisce i primi veri villaggi."
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    const startScreen = document.getElementById('start-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const endScreen = document.getElementById('end-screen');
+    const qText = document.getElementById('question-text');
+    const qCounter = document.getElementById('question-counter');
+    const optContainer = document.getElementById('options-container');
+    const feedbackBox = document.getElementById('feedback-box');
+    const feedbackTitle = document.getElementById('feedback-title');
+    const feedbackText = document.getElementById('feedback-text');
+    const scoreDisplay = document.getElementById('score-display');
+    const finalScore = document.getElementById('final-score');
+
+    function startQuiz() {
+        startScreen.classList.remove('active');
+        quizScreen.classList.add('active');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        feedbackBox.classList.remove('show');
+        optContainer.innerHTML = '';
+        const data = questions[currentQ];
+        
+        qText.textContent = data.q;
+        qCounter.textContent = `Domanda ${currentQ + 1} / ${questions.length}`;
+
+        data.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option';
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx, btn);
+            optContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(selectedIndex, btnElement) {
+        const data = questions[currentQ];
+        const isCorrect = (selectedIndex === data.answer);
+        
+        const allButtons = optContainer.querySelectorAll('.option');
+        allButtons.forEach((btn, idx) => {
+            btn.classList.add('disabled');
+            if (idx === data.answer) {
+                btn.classList.add('correct');
+            } else if (idx === selectedIndex && !isCorrect) {
+                btn.classList.add('wrong');
+            }
+        });
+
+        if (isCorrect) {
+            score++;
+            scoreDisplay.textContent = `Punti: ${score}`;
+            feedbackTitle.textContent = "✅ Corretto!";
+            feedbackBox.style.borderColor = "var(--kahoot-green)";
+            feedbackTitle.style.color = "var(--kahoot-green)";
+        } else {
+            feedbackTitle.textContent = "❌ Sbagliato!";
+            feedbackBox.style.borderColor = "var(--kahoot-red)";
+            feedbackTitle.style.color = "var(--kahoot-red)";
+        }
+
+        feedbackText.textContent = data.explanation;
+        feedbackBox.classList.add('show');
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            loadQuestion();
+        } else {
+            quizScreen.classList.remove('active');
+            endScreen.classList.add('active');
+            finalScore.textContent = `Hai totalizzato ${score} punti su ${questions.length}.`;
+        }
+    }
+</script>
+
+</body>
+</html>
